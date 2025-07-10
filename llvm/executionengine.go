@@ -85,6 +85,7 @@ func NewInterpreter(m Module) (ee ExecutionEngine, err error) {
 func NewJITCompiler(m Module, optLevel int) (ee ExecutionEngine, err error) {
 	var cmsg *C.char
 	fail := C.LLVMCreateJITCompilerForModule(&ee.C, m.C, C.unsigned(optLevel), &cmsg)
+	runtime.KeepAlive(m) // <== ADD THIS LINE
 	if fail != 0 {
 		ee.C = nil
 		err = errors.New(C.GoString(cmsg))
